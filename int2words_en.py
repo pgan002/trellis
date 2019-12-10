@@ -79,7 +79,7 @@ def int_to_words(n):
         exponent = min(exponent, 3)
         quotient, remainder = divmod(n, 10**exponent)
     else:
-        quotient, remainder = divmod(n, 10**(exponent//3 * 3))
+        quotient, remainder = divmod(n, 10**(exponent // 3 * 3))
 
     unit = POWERS.get(exponent, large_int.large_int_word(exponent // 3 - 1))
     prefix = sign + int_to_words(quotient) + ' ' + unit
