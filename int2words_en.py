@@ -3,7 +3,8 @@ import argparse
 import math
 import sys
 
-# Reference: https://en.wikipedia.org/wiki/Names_of_large_numbers
+import large_int
+
 
 UNITS_AND_TEENS = [
     'zero',
@@ -38,41 +39,12 @@ TENS = [
     'eighty',
     'ninety'
 ]
-POWERS = [
-        'thousand',
-        'million',
-        'billion',
-        'trillion',
-        'quadrillion',
-        'quintillion',
-        'sextillion',
-        'septillion',
-        'octillion',
-        'nonillion',
-        'decillion',
-        'undecillion',
-        'duodecillion',
-        'tredecillion',
-        'quattuordecillion',
-        'quindecillion',
-        'sexdecillion',
-        'septendecillion',
-        'octodecillion',
-        'novemdecillion',
-        'vigintillion',
-        'unvigintillion',
-        'duovigintillion',
-        'tresvigintillion',
-        'quattuorvigintillion',
-        'quinquavigintillion',
-        'sesvigintillion',
-        'septemvigintillion',
-        'octovigintillion',
-        'novemvigintillion',
-        'trigintillion',
-]
-
-MAX_EXPONENT = 3 * (1 + len(POWERS))
+POWERS = {
+    1: '',
+    2: 'hundred',
+    3: 'thousand'
+}
+SEPARATORS = {1: '-', 2: ' and'}
 
 
 def int_to_words(n):
@@ -83,10 +55,10 @@ def int_to_words(n):
 
     sign = 'minus ' if n < 0 else ''
     n = abs(n)
-    
-    if n > 10**(3*(1+len(POWERS))):
+
+    if n > 10**(large_int.MAX):
         raise ValueError('Error: %s: Maximum absolute number is 10**%s-1' 
-                         % (n, MAX_EXPONENT))
+                         % (n, large_int.MAX))
 
     # Units and teens
     if n <= 19:
@@ -94,38 +66,34 @@ def int_to_words(n):
     
     # Tens
     if n <= 99:
-        tens, units = divmod(n, 10)
-        prefix = sign + TENS[tens - 1]
-        if not units:
-            return prefix
+        quotient, remainder = divmod(n, 10)
+        if remainder:
+            suffix = '-' + UNITS_AND_TEENS[remainder]
         else:
-            return prefix + '-' + UNITS_AND_TEENS[units]
-
-    # Hundreds
-    if n <= 999:
-        quotient, remainder = divmod(n, 100)
-        prefix = sign + int_to_words(quotient) + ' hundred'
-        if not remainder:
-            return prefix
-        else:
-            return prefix + ' and ' + int_to_words(remainder)
-
-    # Other
+            suffix = ''
+        return sign + TENS[quotient-1] + suffix
+    
+    # Hundreds, thousands and greater
     exponent = int(math.log(n + 0.1, 10))  # Add 0.1 to avoid rounding error
-    quotient, remainder = divmod(n, 10**exponent)
-    prefix = sign + int_to_words(quotient) + ' ' + POWERS[exponent // 3 - 1]
-    if not remainder:
+    if exponent < 6:
+        exponent = min(exponent, 3)
+        quotient, remainder = divmod(n, 10**exponent)
+    else:
+        quotient, remainder = divmod(n, 10**(exponent//3 * 3))
+
+    unit = POWERS.get(exponent, large_int.large_int_word(exponent // 3 - 1))
+    prefix = sign + int_to_words(quotient) + ' ' + unit
+    if remainder:
+        return prefix + SEPARATORS.get(exponent, '') + ' ' + int_to_words(remainder)
+    else:
         return prefix
-    if remainder <= 99:
-        prefix += ' and'
-    return prefix + ' ' + int_to_words(remainder)
 
 
 parser = argparse.ArgumentParser(
     description='Convert an integer number into words in English.\n'
     'The largest number is 10**%s-1. '
     'For large numbers, use the short scale used in US, Canada, and modern '
-    'British English.' % MAX_EXPONENT
+    'British English.' % large_int.MAX
 )
 parser.add_argument('integer', nargs='*', type=int)
 
@@ -139,16 +107,17 @@ if __name__ == '__main__':
             print(e, file=sys.stderr)
 
 # Test:
-12
-20
-99
-101
-1001
-10093
-1234
-12345
-0
--10
-'hello'
-1.0
-10**64
+# 12 'twelve'
+# 20 'twenty'
+# 99 'ninety-nine'
+# 101 'one hundred and one'
+# 1001 ' one thousand and one'
+# 10093 'ten thousand and ninety-three'
+# 1234 'one thousand two hundred and thirty-four'
+# 12345 'twelve thousand three hundred and forty-five'
+# 100000000 'ten million'
+# 0 'zero'
+# -10 'minus ten'
+# 'hello' Error
+# 1.0 Error
+
