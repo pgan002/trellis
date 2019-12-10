@@ -5,11 +5,6 @@ import sys
 
 # Reference: https://en.wikipedia.org/wiki/Names_of_large_numbers
 
-parser = argparse.ArgumentParser(
-    description='Convert an integer number into words, up to (excluding) 10**64.'
-)
-parser.add_argument('integer', nargs='*', type=int)
-
 UNITS_AND_TEENS = [
     'zero',
     'one',
@@ -65,7 +60,19 @@ POWERS = [
         'octodecillion',
         'novemdecillion',
         'vigintillion',
+        'unvigintillion',
+        'duovigintillion',
+        'tresvigintillion',
+        'quattuorvigintillion',
+        'quinquavigintillion',
+        'sesvigintillion',
+        'septemvigintillion',
+        'octovigintillion',
+        'novemvigintillion',
+        'trigintillion',
 ]
+
+MAX_EXPONENT = 3 * (1 + len(POWERS))
 
 
 def int_to_words(n):
@@ -78,8 +85,8 @@ def int_to_words(n):
     n = abs(n)
     
     if n > 10**(3*(1+len(POWERS))):
-        raise ValueError('Error: %s: Maximum absolute number is %s' 
-                         % (n, 10 * (3 * (1 + len(POWERS)))))
+        raise ValueError('Error: %s: Maximum absolute number is 10**%s-1' 
+                         % (n, MAX_EXPONENT))
 
     # Units and teens
     if n <= 19:
@@ -112,6 +119,15 @@ def int_to_words(n):
     if remainder <= 99:
         prefix += ' and'
     return prefix + ' ' + int_to_words(remainder)
+
+
+parser = argparse.ArgumentParser(
+    description='Convert an integer number into words in English.\n'
+    'The largest number is 10**%s-1. '
+    'For large numbers, use the short scale used in US, Canada, and modern '
+    'British English.' % MAX_EXPONENT
+)
+parser.add_argument('integer', nargs='*', type=int)
 
 
 if __name__ == '__main__':
