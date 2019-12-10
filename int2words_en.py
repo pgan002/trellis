@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import argparse
-import collections
 import math
 import sys
 
@@ -44,7 +43,6 @@ TENS = [
     'eighty',
     'ninety'
 ]
-
 POWERS = [
         'thousand',
         'million',
@@ -111,12 +109,9 @@ def int_to_words(n):
     prefix = sign + int_to_words(quotient) + ' ' + POWERS[exponent // 3 - 1]
     if not remainder:
         return prefix
-    suffix = int_to_words(remainder)
     if remainder < 100:
-        sep = ' and '
-    else:
-        sep = ' '
-    return prefix + sep + suffix
+        prefix += ' and'
+    return prefix + ' ' + int_to_words(remainder)
 
 
 if __name__ == '__main__':
