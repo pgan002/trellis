@@ -39,54 +39,53 @@ TENS = [
     'eighty',
     'ninety'
 ]
-POWERS = {
-    1: '',
-    2: 'hundred',
-    3: 'thousand'
-}
-SEPARATORS = {1: '-', 2: ' and'}
 
 
 def int_to_words(n):
     """Convert integer `n` to words in English"""
     if not isinstance(n, (int, str)):
         raise ValueError('Expected an integer')
-    n = int(n)
+    n = str(n)
+    if n.startswith('-'):
+        sign = 'minus '
+        n = n[1:]
+    else:
+        sign = ''
 
-    sign = 'minus ' if n < 0 else ''
-    n = abs(n)
-
-    if n > 10**(large_int.MAX):
+    if len(n) > large_int.MAX:
         raise ValueError('Error: %s: Maximum absolute number is 10**%s-1' 
                          % (n, large_int.MAX))
 
     # Units and teens
-    if n <= 19:
-        return sign + UNITS_AND_TEENS[n]
+    if int(n) <= 19:
+        return sign + UNITS_AND_TEENS[int(n)]
     
     # Tens
-    if n <= 99:
-        quotient, remainder = divmod(n, 10)
-        if remainder:
-            suffix = '-' + UNITS_AND_TEENS[remainder]
-        else:
-            suffix = ''
-        return sign + TENS[quotient-1] + suffix
-    
+    if len(n) <= 2:
+        result = sign + TENS[int(n[0])-1]
+        if n[1] != '0':
+            result += '-' + UNITS_AND_TEENS[int(n[1])]
+        return result
+        
     # Hundreds, thousands and greater
-    exponent = int(math.log(n + 0.1, 10))  # Add 0.1 to avoid rounding error
-    if exponent < 6:
-        exponent = min(exponent, 3)
-        quotient, remainder = divmod(n, 10**exponent)
+    if len(n) <= 3:
+        exponent, boundary = divmod(len(n) - 1, 2)
+        unit = 'hundred'
+    elif len(n) <= 6:
+        exponent, boundary = divmod(len(n) - 1, 3)
+        unit = 'thousand'
     else:
-        quotient, remainder = divmod(n, 10**(exponent // 3 * 3))
+        exponent, boundary = divmod(len(n) - 1, 3)
+        unit = large_int.large_int_word(exponent - 1)
 
-    unit = POWERS.get(exponent, large_int.large_int_word(exponent // 3 - 1))
-    prefix = sign + int_to_words(quotient) + ' ' + unit
-    if remainder:
-        return prefix + SEPARATORS.get(exponent, '') + ' ' + int_to_words(remainder)
-    else:
-        return prefix
+    prefix = n[:boundary + 1]
+    suffix = n[boundary + 1:].lstrip('0')
+    result = sign + int_to_words(prefix) + ' ' + unit
+    if suffix:
+        if len(suffix) <= 2:
+            result += ' and'
+        result += ' ' + int_to_words(suffix)
+    return result
 
 
 parser = argparse.ArgumentParser(
