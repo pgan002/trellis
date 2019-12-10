@@ -95,7 +95,7 @@ def int_to_words(n):
             return prefix + '-' + UNITS_AND_TEENS[units]
 
     # Hundreds
-    if n < 10**3:
+    if n <= 999:
         quotient, remainder = divmod(n, 100)
         prefix = sign + int_to_words(quotient) + ' hundred'
         if not remainder:
@@ -109,7 +109,7 @@ def int_to_words(n):
     prefix = sign + int_to_words(quotient) + ' ' + POWERS[exponent // 3 - 1]
     if not remainder:
         return prefix
-    if remainder < 100:
+    if remainder <= 99:
         prefix += ' and'
     return prefix + ' ' + int_to_words(remainder)
 
