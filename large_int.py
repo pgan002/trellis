@@ -5,56 +5,43 @@ import sys
 
 
 UNITS = [
-    '', 'mi', 'bi', 'tri', 'quadri', 'quinti', 'sexti', 'septi', 'octi', 'noni',
-    'deci',
+    '', 'mi', 'bi', 'tri', 'quadri', 'quinti', 'sexti', 'septi', 'octi', 'noni'
 ]
 UNIT_PREFIXES = [
     '', 'un', 'duo', 'tre', 'quattuor', 'quinqua', 'se', 'septen', 'octo', 
     'noven'
 ]
 TENS = [
-    '', 'vi', 'tri', 'quadra', 'quinqua', 'sexa', 'septua', 'octo', 'nona'
+    '', 'deci', 'viginti', 'triginti', 'quadraginti', 'quinquaginti', 
+    'sexaginti', 'septuaginti', 'octogingi', 'nonaginti'
 ]
 HUNDREDS = [
-    'centi', 'ducenti', 'trecenti', 'quadringenti', 'quingenti', 'sescenti', 
+    '', 'centi', 'ducenti', 'trecenti', 'quadringenti', 'quingenti', 'sescenti', 
     'septigenti', 'octigenti', 'nongenti'
 ]
 MAX = (1000 * 3) + 1
 
 
-def _teen(ix):
-    quotient, remainder = divmod(ix, 10)
-    prefix = UNIT_PREFIXES[remainder]
-    if not quotient:
-        suffix = ''
+def large_int_word2(ix):
+    """Return the name of the large integer n = 10 ** (3 * (ix + 1))"""
+
+    digits = [int(i) for i in ix]
+    units = tens = hundreds = thousands = ''
+
+    if len(digits) == 1:
+        units = UNITS[int(ix)]
     else:
-        assert quotient == 1
-        suffix = 'deci'
-    return prefix + suffix
+        units = UNIT_PREFIXES[digits[-1]]
+        tens = TENS[digits[-2]]
+        if len(digits) >= 3:
+            hundreds = HUNDREDS[digits[-3]]
+        if len(digits) >= 4:
+            thousands = UNITS[digits[-4]] + 'llini'
+        if len(digits) >= 5:
+            raise
 
-
-def large_int_word(ix):
-    if ix <= 10:
-        word = UNITS[ix]
-    elif ix < 20:
-        word = _teen(ix)
-    elif ix < 100:
-        quotient, remainder = divmod(ix, 10)
-        suffix = TENS[quotient - 1] + 'gint'
-        prefix = UNIT_PREFIXES[remainder]
-        word = prefix + suffix
-    elif ix < 1000:
-        quotient, remainder = divmod(ix, 100)
-        suffix = HUNDREDS[quotient - 1]
-        if remainder:
-            prefix = _teen(remainder)
-        else:
-            prefix = ''
-        word = prefix + suffix
-    elif ix == 1000:
-        word = 'millini'
-    return word + 'llion'
+    return units + tens + hundreds + thousands + 'llion'
 
 
 if __name__ == '__main__':
-    print(large_int_word(int(sys.argv[1])))
+    print(large_int_word2(sys.argv[1]))
