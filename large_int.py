@@ -19,17 +19,17 @@ HUNDREDS = [
     '', 'centi', 'ducenti', 'trecenti', 'quadringenti', 'quingenti', 'sescenti', 
     'septigenti', 'octigenti', 'nongenti'
 ]
-MAX = (1000 * 3) + 1
+MAX = 3 * 10000 + 3
 
 
-def large_int_word2(ix):
-    """Return the name of the large integer n = 10 ** (3 * (ix + 1))"""
+def large_int_word2(x):
+    """Return the name of the large integer n = 10 ** (3 * x + 3)"""
 
-    digits = [int(i) for i in ix]
+    digits = [int(i) for i in x]
     units = tens = hundreds = thousands = ''
 
     if len(digits) == 1:
-        units = UNITS[int(ix)]
+        units = UNITS[digits(-1)]
     else:
         units = UNIT_PREFIXES[digits[-1]]
         tens = TENS[digits[-2]]
