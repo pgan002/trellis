@@ -4,6 +4,10 @@ import sys
 
 from . import large_int
 
+DESCRIPTION = """Convert an integer number into words in English.\n
+For large numbers, use the short scale used in US, Canada, and modern British 
+English.\n
+The largest number is 10**%s-1.""" % large_int.MAX
 
 UNITS_AND_TEENS = [
     'zero', 'one', 'two', 'three', 'four',
@@ -45,14 +49,14 @@ def int_to_words(n):
         
     # Hundreds, thousands and greater
     if len(n) <= 3:
-        exponent, boundary = divmod(len(n) - 1, 2)
+        _, boundary = divmod(len(n) - 1, 2)
         unit = 'hundred'
     elif len(n) <= 6:
-        exponent, boundary = divmod(len(n) - 1, 3)
+        _, boundary = divmod(len(n) - 1, 3)
         unit = 'thousand'
     else:
-        exponent, boundary = divmod(len(n) - 1, 3)
-        unit = large_int.large_int_word(exponent - 1)
+        exp, boundary = divmod(len(n) - 1, 3)
+        unit = large_int.large_int_word(exp - 1)
 
     prefix = n[:boundary + 1]
     suffix = n[boundary + 1:].lstrip('0')
@@ -64,12 +68,7 @@ def int_to_words(n):
     return result
 
 
-parser = argparse.ArgumentParser(
-    description='Convert an integer number into words in English.\n'
-    'The largest number is 10**%s-1. '
-    'For large numbers, use the short scale used in US, Canada, and modern '
-    'British English.' % large_int.MAX
-)
+parser = argparse.ArgumentParser(description=DESCRIPTION)
 parser.add_argument('integer', nargs='*', type=int)
 
 
