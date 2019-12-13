@@ -22,14 +22,14 @@ HUNDREDS = [
 MAX = 3 * 10000 + 3
 
 
-def large_int_word2(x):
+def large_int_word(x):
     """Return the name of the large integer n = 10 ** (3 * x + 3)"""
 
-    digits = [int(i) for i in x]
+    digits = [int(i) for i in str(x)]
     units = tens = hundreds = thousands = ''
 
     if len(digits) == 1:
-        units = UNITS[digits(-1)]
+        units = UNITS[digits[-1]]
     else:
         units = UNIT_PREFIXES[digits[-1]]
         tens = TENS[digits[-2]]
@@ -44,4 +44,4 @@ def large_int_word2(x):
 
 
 if __name__ == '__main__':
-    print(large_int_word2(sys.argv[1]))
+    print(large_int_word(sys.argv[1]))

@@ -1,43 +1,19 @@
 #!/usr/bin/python3
 import argparse
-import math
 import sys
 
-import large_int
+from . import large_int
 
 
 UNITS_AND_TEENS = [
-    'zero',
-    'one',
-    'two',
-    'three',
-    'four',
-    'five',
-    'six',
-    'seven',
-    'eight',
-    'nine',
-    'ten',
-    'eleven',
-    'twelve',
-    'thirteen',
-    'fourteen',
-    'fifteen',
-    'sixteen',
-    'seventeen',
-    'eighteen',
-    'nineteen'
+    'zero', 'one', 'two', 'three', 'four',
+    'five', 'six', 'seven', 'eight', 'nine',
+    'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen',
+    'sixteen', 'seventeen', 'eighteen', 'nineteen'
 ]
 TENS = [
-    'ten',
-    'twenty',
-    'thirty',
-    'forty',
-    'fifty',
-    'sixty',
-    'seventy',
-    'eighty',
-    'ninety'
+    '', 'ten', 'twenty', 'thirty', 'forty', 'fifty',
+    'sixty', 'seventy', 'eighty', 'ninety'
 ]
 
 
@@ -52,7 +28,7 @@ def int_to_words(n):
     else:
         sign = ''
 
-    if len(n) > large_int.MAX:
+    if len(n) >= large_int.MAX:
         raise ValueError('Error: %s: Maximum absolute number is 10**%s-1' 
                          % (n, large_int.MAX))
 
@@ -62,7 +38,7 @@ def int_to_words(n):
     
     # Tens
     if len(n) <= 2:
-        result = sign + TENS[int(n[0])-1]
+        result = sign + TENS[int(n[0])]
         if n[1] != '0':
             result += '-' + UNITS_AND_TEENS[int(n[1])]
         return result
