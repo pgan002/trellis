@@ -15,6 +15,7 @@ def index(request):
     try:
         words = int_to_words(n)
     except ValueError as e:
-        return JsonResponse({'status': 'error', 'message': e})
+        return JsonResponse({'status': 'error', 'message': e},
+                            status=401)
 
     return JsonResponse({'status': 'ok', 'num_in_english': words})
