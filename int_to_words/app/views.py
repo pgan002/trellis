@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 
-from app import en
+from app.en import int_to_words
 
 
 def index(request):
@@ -12,4 +12,9 @@ def index(request):
                 'message': 'missing parameter "number"'
             },
             status=401)
-    return JsonResponse({'status': 'ok', 'num_in_english': en.int_to_words(n)})
+    try:
+        words = int_to_words(n)
+    except ValueError as e:
+        return JsonResponse({'status': 'error', 'message': e})
+
+    return JsonResponse({'status': 'ok', 'num_in_english': words})
