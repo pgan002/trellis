@@ -80,18 +80,37 @@ if __name__ == '__main__':
         except ValueError as e:
             print(e, file=sys.stderr)
 
-# Test:
+# TODO: Add unit tests
+#
+# Tested:
+#
 # 12 'twelve'
+#
 # 20 'twenty'
+#
 # 99 'ninety-nine'
+#
 # 101 'one hundred and one'
+#
 # 1001 ' one thousand and one'
+#
 # 10093 'ten thousand and ninety-three'
+#
 # 1234 'one thousand two hundred and thirty-four'
+#
 # 12345 'twelve thousand three hundred and forty-five'
+#
 # 100000000 'ten million'
+#
 # 0 'zero'
+#
+# 12345678 'twelve million three hundred and forty-five thousand six hundred
+# and seventy-eight'
+#
 # -10 'minus ten'
-# 'hello' Error
-# 1.0 Error
-
+#
+# 'hello' ValueError
+#
+# 1.0 ValueError
+#
+# '' ValueError
