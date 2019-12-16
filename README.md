@@ -21,9 +21,11 @@ HTTP status: `200`. Response body:
       "num_in_english": "twelve million three hundred forty five thousand six hundred seventy eight"
     }
 
-
 The endpoint takes query parameters as required for a standard HTTP GET method, 
 instead of JSON request body as suggested by the task description.
+
+We do not implement models because Django models are intended to store data, 
+this app does not store any data.
 
 To run unit tests:
 
@@ -37,7 +39,7 @@ We need to publish the API documentation, but I do not know Django well enough
 to use its doc-generating facilities.
 
 
-###### Task
+## Task
 
 Create a Python Django application that exposes an endpoint:
 `GET /num_to_english`
