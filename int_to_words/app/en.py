@@ -92,7 +92,7 @@ if __name__ == '__main__':
 #
 # 101 'one hundred and one'
 #
-# 1001 ' one thousand and one'
+# 1001 'one thousand and one'
 #
 # 10093 'ten thousand and ninety-three'
 #
