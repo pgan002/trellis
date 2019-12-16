@@ -20,7 +20,14 @@ HUNDREDS = [
     'septigent', 'octigent', 'nongent'
 ]
 MAX = 3 * 10000 + 3
-
+TEST_CASES = [
+    (1, 'million'),
+    (2, 'billion'),
+    (10, 'decillion'),
+    (11, 'undecillion'),
+    (22, 'duovigintillion'),
+    (38, 'octotrigintillion')
+]
 
 parser = argparse.ArgumentParser(
     description='Produce the names of large integers')
@@ -55,15 +62,7 @@ def large_int_word(x):
 
 
 def test():
-    cases = [
-        (1, 'million'),
-        (2, 'billion'),
-        (10, 'decillion'),
-        (11, 'undecillion'),
-        (22, 'duovigintillion'),
-        (38, 'octotrigintillion')
-    ]
-    for x, name in cases:
+    for x, name in TEST_CASES:
         assert large_int_word(x) == name, large_int_word(x)
 
 

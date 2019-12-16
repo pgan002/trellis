@@ -19,6 +19,22 @@ TENS = [
     '', 'ten', 'twenty', 'thirty', 'forty', 'fifty',
     'sixty', 'seventy', 'eighty', 'ninety'
 ]
+TEST_CASES_OK = [
+    (12, 'twelve'),
+    (20, 'twenty'),
+    (99, 'ninety-nine'),
+    (101, 'one hundred and one'),
+    (1001, 'one thousand and one'),
+    (10093, 'ten thousand and ninety-three'),
+    (1234, 'one thousand two hundred and thirty-four'),
+    (12345, 'twelve thousand three hundred and forty-five'),
+    (100000000, 'one hundred million'),
+    (0, 'zero'),
+    (12345678, 'twelve million three hundred and forty-five thousand six '
+               'hundred and seventy-eight'),
+    (-10, 'minus ten'),
+]
+TEST_CASES_ERROR = ['hello', 1.0, '', None]
 
 
 def int_to_words(n):
@@ -69,30 +85,13 @@ def int_to_words(n):
 
 
 def test_ok():
-    # TODO: Add unittest integration
-    cases = [
-        (12, 'twelve'),
-        (20, 'twenty'),
-        (99, 'ninety-nine'),
-        (101, 'one hundred and one'),
-        (1001, 'one thousand and one'),
-        (10093, 'ten thousand and ninety-three'),
-        (1234, 'one thousand two hundred and thirty-four'),
-        (12345, 'twelve thousand three hundred and forty-five'),
-        (100000000, 'one hundred million'),
-        (0, 'zero'),
-        (12345678, 'twelve million three hundred and forty-five thousand six '
-                   'hundred and seventy-eight'),
-        (-10, 'minus ten'),
-    ]
-    for n, expected in cases:
+    for n, expected in TEST_CASES_OK:
         actual = int_to_words(n)
         assert actual == expected, (actual, expected)
 
 
 def test_errors():
-    cases = ['hello', 1.0, '', None]
-    for x in cases:
+    for x in TEST_CASES_ERROR:
         try:
             int_to_words(x)
         except ValueError:
