@@ -2,7 +2,7 @@
 import argparse
 import sys
 
-from . import large_int
+import large_int
 
 DESCRIPTION = """Convert an integer number into words in English.\n
 For large numbers, use the short scale used in US, Canada, and modern British 
@@ -68,49 +68,51 @@ def int_to_words(n):
     return result
 
 
+def test_ok():
+    # TODO: Add unittest integration
+    cases = [
+        (12, 'twelve'),
+        (20, 'twenty'),
+        (99, 'ninety-nine'),
+        (101, 'one hundred and one'),
+        (1001, 'one thousand and one'),
+        (10093, 'ten thousand and ninety-three'),
+        (1234, 'one thousand two hundred and thirty-four'),
+        (12345, 'twelve thousand three hundred and forty-five'),
+        (100000000, 'one hundred million'),
+        (0, 'zero'),
+        (12345678, 'twelve million three hundred and forty-five thousand six '
+                   'hundred and seventy-eight'),
+        (-10, 'minus ten'),
+    ]
+    for n, expected in cases:
+        actual = int_to_words(n)
+        assert actual == expected, (actual, expected)
+
+
+def test_errors():
+    cases = ['hello', 1.0, '', None]
+    for x in cases:
+        try:
+            int_to_words(x)
+        except ValueError:
+            continue
+        raise 'Expected ValueError: %s' % x
+
+
 parser = argparse.ArgumentParser(description=DESCRIPTION)
 parser.add_argument('integer', nargs='*', type=int)
+parser.add_argument('-t', '--test', action='store_true', help='Run tests')
 
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    for n in args.integer:
-        try:
-            print(int_to_words(n))
-        except ValueError as e:
-            print(e, file=sys.stderr)
-
-# TODO: Add unit tests
-#
-# Tested:
-#
-# 12 'twelve'
-#
-# 20 'twenty'
-#
-# 99 'ninety-nine'
-#
-# 101 'one hundred and one'
-#
-# 1001 'one thousand and one'
-#
-# 10093 'ten thousand and ninety-three'
-#
-# 1234 'one thousand two hundred and thirty-four'
-#
-# 12345 'twelve thousand three hundred and forty-five'
-#
-# 100000000 'ten million'
-#
-# 0 'zero'
-#
-# 12345678 'twelve million three hundred and forty-five thousand six hundred
-# and seventy-eight'
-#
-# -10 'minus ten'
-#
-# 'hello' ValueError
-#
-# 1.0 ValueError
-#
-# '' ValueError
+    if args.test:
+        test_ok()
+        test_errors()
+    else:
+        for n in args.integer:
+            try:
+                print(int_to_words(n))
+            except ValueError as e:
+                print(e, file=sys.stderr)
