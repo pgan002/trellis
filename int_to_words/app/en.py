@@ -2,7 +2,7 @@
 import argparse
 import sys
 
-import large_int
+from . import large_int
 
 DESCRIPTION = """Convert an integer number into words in English.\n
 For large numbers, use the short scale used in US, Canada, and modern British 
@@ -107,12 +107,8 @@ parser.add_argument('-t', '--test', action='store_true', help='Run tests')
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    if args.test:
-        test_ok()
-        test_errors()
-    else:
-        for n in args.integer:
-            try:
-                print(int_to_words(n))
-            except ValueError as e:
-                print(e, file=sys.stderr)
+    for n in args.integer:
+        try:
+            print(int_to_words(n))
+        except ValueError as e:
+            print(e, file=sys.stderr)

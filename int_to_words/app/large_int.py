@@ -54,19 +54,20 @@ def large_int_word(x):
     return units + tens + hundreds + thousands + 'illion'
 
 
+def test():
+    cases = [
+        (1, 'million'),
+        (2, 'billion'),
+        (10, 'decillion'),
+        (11, 'undecillion'),
+        (22, 'duovigintillion'),
+        (38, 'octotrigintillion')
+    ]
+    for x, name in cases:
+        assert large_int_word(x) == name, large_int_word(x)
+
+
 if __name__ == '__main__':
     args = parser.parse_args()
-    if args.test:
-        cases = [
-            (1, 'million'),
-            (2, 'billion'),
-            (10, 'decillion'),
-            (11, 'undecillion'),
-            (22, 'duovigintillion'),
-            (38, 'octotrigintillion')
-        ]
-        for x, name in cases:
-            assert large_int_word(x) == name, large_int_word(x)
-    else:
-        for i in args.index:
-            print(large_int_word(i))
+    for i in args.index:
+        print(large_int_word(i))
